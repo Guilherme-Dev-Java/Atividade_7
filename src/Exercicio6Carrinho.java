@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,12 +73,19 @@ class Carrinho {
         if (porcentagem < 0 || porcentagem > 30) {
             throw new IllegalArgumentException("Cupom inválido (0% a 30%)");
         }
+        List<ItemCarrinho> novaLista = new ArrayList<>();
         for (ItemCarrinho item : itens) {
             double precoAtual = item.getProduto().getPreco();
             double novoPreco = precoAtual - (precoAtual * (porcentagem / 100));
-            item.getProduto().setPreco(new BigDecimal(novoPreco).setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue());
+           
+            Exercicio1Produto produtoComDesconto = new Exercicio1Produto(
+                item.getProduto().getNome(),
+                new BigDecimal(novoPreco).setScale(2, RoundingMode.HALF_EVEN).doubleValue(),
+                item.getProduto().getQuantidadeEmEstoque()
+            );
+            novaLista.add(new ItemCarrinho(produtoComDesconto, item.getQuantidade()));
         }
-        return new Carrinho(itens);
+        return new Carrinho(novaLista);
     }
 
     public List<ItemCarrinho> getItens() { return itens; }
@@ -92,7 +100,11 @@ public class Exercicio6Carrinho {
         carrinho = carrinho.adicionar(item1);
 
         System.out.println("Itens no carrinho: " + carrinho.getItens().size());
-        carrinho = carrinho.aplicarCupom(10);
-        System.out.println("Preço com desconto: " + p1.getPreco());
+
+        
+        Carrinho carrinhoComDesconto = carrinho.aplicarCupom(10);
+
+        System.out.println("Preço original do produto: " + p1.getPreco());
+        System.out.println("Preço com desconto no novo carrinho: " + carrinhoComDesconto.getItens().get(0).getProduto().getPreco());
     }
 }

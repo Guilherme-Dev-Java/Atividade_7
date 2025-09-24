@@ -56,7 +56,7 @@ public class Exercicio8StrategyFrete {
         pedido.setEstrategia(new RetiradaNaLoja());
         System.out.println("Retirada na loja: " + pedido.calcularFrete());
 
-        // Lambda: frete grátis acima de X
+        
         pedido.setEstrategia(p -> p.getValor().compareTo(new BigDecimal("100")) > 0 ? BigDecimal.ZERO : new BigDecimal("20"));
         System.out.println("Frete promocional: " + pedido.calcularFrete());
     }
